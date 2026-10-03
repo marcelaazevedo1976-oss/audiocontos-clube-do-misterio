@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth, db } from './firebase';
 import { 
   signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword 
+  createUserWithEmailAndPassword, sendPasswordResetEmail 
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
@@ -40,7 +40,7 @@ export default function AuthModal({ onClose, onSuccess, user }) {
 
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword, sendPasswordResetEmail(auth, email, password);
       await grantAccess(userCredential.user.uid);
     } catch (err) {
       console.error(err);
@@ -48,6 +48,25 @@ export default function AuthModal({ onClose, onSuccess, user }) {
       else if (err.code === 'auth/weak-password') setError('A senha deve ter pelo menos 6 caracteres.');
       else setError('Erro ao criar conta: ' + err.message);
        
+    }
+    setLoading(false);
+  };
+
+  
+  const handleReset = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      setError('Digite seu e-mail acima para redefinir a senha.');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setError('E-mail de redefinição enviado! Verifique sua caixa de entrada.');
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao enviar e-mail. Verifique se o e-mail está correto.');
     }
     setLoading(false);
   };
@@ -141,10 +160,11 @@ export default function AuthModal({ onClose, onSuccess, user }) {
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <span style={{ fontSize: '3rem' }}>{mode === 'unlock' ? '🗝️' : '🕵️‍♂️'}</span>
           <h2 style={{ color: '#d4af37', margin: '10px 0 5px 0' }}>
-            {mode === 'login' ? 'Acesso Restrito' : mode === 'register' ? 'Criar Conta VIP' : 'Desbloquear Jogos'}
+            {mode === 'login' ? 'Acesso Restrito' : mode === 'register' ? 'Criar Conta VIP' : mode === 'reset' ? 'Recuperar Senha' : 'Desbloquear Jogos'}
           </h2>
           <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>
             {mode === 'login' && 'Faça login para continuar sua investigação.'}
+            {mode === 'reset' && 'Insira seu e-mail para receber um link de redefinição de senha.'}
             {mode === 'register' && 'Crie sua conta e use o código de liberação.'}
             {mode === 'unlock' && 'Você já está logado! Digite o Código VIP para liberar.'}
           </p>
@@ -154,6 +174,29 @@ export default function AuthModal({ onClose, onSuccess, user }) {
           <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#fca5a5', padding: '10px', borderRadius: '6px', marginBottom: '15px', fontSize: '0.85rem', textAlign: 'center' }}>
             {error}
           </div>
+        )}
+
+        
+        {mode === 'reset' && (
+          <form onSubmit={handleReset}>
+            <input 
+              type="email" placeholder="Seu E-mail para redefinir" required 
+              value={email} onChange={(e) => setEmail(e.target.value)} 
+              style={inputStyle} 
+            />
+            <button type="submit" disabled={loading} style={btnStyle}>
+              {loading ? 'Enviando...' : 'Enviar Link de Redefinição'}
+            </button>
+            <div style={{ textAlign: 'center', marginTop: '15px' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Lembrou a senha? </span>
+              <button 
+                type="button" onClick={() => { setError(''); setMode('login'); }}
+                style={{ background: 'none', border: 'none', color: '#d4af37', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.9rem' }}
+              >
+                Voltar
+              </button>
+            </div>
+          </form>
         )}
 
         {(mode === 'login' || mode === 'register') && (
