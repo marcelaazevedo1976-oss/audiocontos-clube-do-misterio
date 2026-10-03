@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 export function SiteHeader() {
   const portalUrl = "https://portal-clube-do-misterio.lovable.app/";
@@ -15,15 +15,8 @@ export function SiteHeader() {
 
         <nav className="flex w-full items-center justify-center gap-3 sm:w-auto">
           <a
-            href={`${portalUrl}#como-funciona`}
-            className="flex items-center justify-center min-h-12 flex-1 rounded-md border border-border px-4 py-3 text-center text-sm font-semibold tracking-[0.12em] text-foreground uppercase transition-colors hover:border-gold hover:text-champagne sm:flex-none"
-          >
-            Como Funciona
-          </a>
-
-          <a
             href={portalUrl}
-            className="flex items-center justify-center min-h-12 flex-1 rounded-md border border-gold bg-primary px-4 py-3 text-sm font-bold tracking-[0.12em] text-primary-foreground uppercase shadow-[var(--shadow-gold)] transition-opacity hover:opacity-90 sm:flex-none"
+            className="flex min-h-12 flex-1 items-center justify-center rounded-md border border-gold bg-primary px-4 py-3 text-sm font-bold tracking-[0.12em] text-primary-foreground uppercase shadow-[var(--shadow-gold)] transition-opacity hover:opacity-90 sm:flex-none"
           >
             Voltar para o Clube
           </a>
