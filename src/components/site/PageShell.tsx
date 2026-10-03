@@ -16,7 +16,7 @@ export function PageShell({ eyebrow, title, intro, children }: Props) {
 
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-          <BackLink />
+          
 
           <header className="mt-8 text-center">
             {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
@@ -32,7 +32,7 @@ export function PageShell({ eyebrow, title, intro, children }: Props) {
           <div className="mt-12">{children}</div>
 
           <div className="mt-14 flex justify-center">
-            <BackLink />
+            
           </div>
         </div>
       </main>
@@ -42,13 +42,4 @@ export function PageShell({ eyebrow, title, intro, children }: Props) {
   );
 }
 
-function BackLink() {
-  return (
-    <a
-      href="https://portal-clube-do-misterio.lovable.app/"
-      className="inline-flex min-h-12 items-center rounded-md border border-border px-5 py-3 text-sm font-semibold tracking-[0.14em] text-foreground uppercase transition-colors hover:border-gold hover:text-champagne"
-    >
-      ← Voltar ao Clube
-    </a>
-  );
-}
+
