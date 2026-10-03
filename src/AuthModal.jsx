@@ -40,7 +40,7 @@ export default function AuthModal({ onClose, onSuccess, user }) {
 
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword, sendPasswordResetEmail(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await grantAccess(userCredential.user.uid);
     } catch (err) {
       console.error(err);
