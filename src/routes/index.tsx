@@ -329,7 +329,14 @@ function AudioContos() {
 
                         {pacote.disponivel ? (
                           <button
-                            onClick={() => toggleAberto(pacote.id)}
+                            onClick={() => {
+                            if (accessMap[pacote.id]) {
+                              toggleAberto(pacote.id);
+                            } else {
+                              setPendingPack(pacote.id);
+                              setShowAuthModal(true);
+                            }
+                          }}
                             className="flex w-fit items-center gap-2 rounded-md border border-gold/60 px-4 py-2 font-typewriter text-xs tracking-[0.15em] text-gold uppercase transition-colors hover:border-gold hover:bg-gold/10"
                           >
                             {estaAberto
