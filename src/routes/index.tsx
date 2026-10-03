@@ -146,7 +146,7 @@ function AudioContos() {
   const handleAuthSuccess = () => {
     setShowAuthModal(false);
     if (pendingPack) {
-      setAbertos(prev => ({ ...prev, [pendingPack]: true }));
+      setAbertos(prev => { const next = new Set(prev); next.add(pendingPack); return next; });
       setPendingPack(null);
     }
   };
