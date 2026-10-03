@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AudiocontosRouteImport } from './routes/audiocontos'
 import { Route as EscapeRoomsRouteImport } from './routes/escape-rooms'
 import { Route as JogosRouteImport } from './routes/jogos'
 import { Route as PacotesRouteImport } from './routes/pacotes'
@@ -18,11 +17,6 @@ import { Route as PacotesRouteImport } from './routes/pacotes'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AudiocontosRoute = AudiocontosRouteImport.update({
-  id: '/audiocontos',
-  path: '/audiocontos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EscapeRoomsRoute = EscapeRoomsRouteImport.update({
@@ -43,14 +37,12 @@ const PacotesRoute = PacotesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/audiocontos': typeof AudiocontosRoute
   '/escape-rooms': typeof EscapeRoomsRoute
   '/jogos': typeof JogosRoute
   '/pacotes': typeof PacotesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/audiocontos': typeof AudiocontosRoute
   '/escape-rooms': typeof EscapeRoomsRoute
   '/jogos': typeof JogosRoute
   '/pacotes': typeof PacotesRoute
@@ -58,23 +50,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/audiocontos': typeof AudiocontosRoute
   '/escape-rooms': typeof EscapeRoomsRoute
   '/jogos': typeof JogosRoute
   '/pacotes': typeof PacotesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/audiocontos' | '/escape-rooms' | '/jogos' | '/pacotes'
+  fullPaths: '/' | '/escape-rooms' | '/jogos' | '/pacotes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/audiocontos' | '/escape-rooms' | '/jogos' | '/pacotes'
-  id:
-    '__root__' | '/' | '/audiocontos' | '/escape-rooms' | '/jogos' | '/pacotes'
+  to: '/' | '/escape-rooms' | '/jogos' | '/pacotes'
+  id: '__root__' | '/' | '/escape-rooms' | '/jogos' | '/pacotes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AudiocontosRoute: typeof AudiocontosRoute
   EscapeRoomsRoute: typeof EscapeRoomsRoute
   JogosRoute: typeof JogosRoute
   PacotesRoute: typeof PacotesRoute
@@ -87,13 +76,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audiocontos': {
-      id: '/audiocontos'
-      path: '/audiocontos'
-      fullPath: '/audiocontos'
-      preLoaderRoute: typeof AudiocontosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/escape-rooms': {
@@ -122,7 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AudiocontosRoute: AudiocontosRoute,
   EscapeRoomsRoute: EscapeRoomsRoute,
   JogosRoute: JogosRoute,
   PacotesRoute: PacotesRoute,

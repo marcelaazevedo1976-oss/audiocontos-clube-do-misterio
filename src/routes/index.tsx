@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { auth, db } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import AuthModal from "../AuthModal";
 import { PageShell } from "@/components/site/PageShell";
 import { Headphones, Lock, ChevronDown, ChevronUp, Play, Pause, SkipForward, SkipBack, RefreshCw } from "lucide-react";
 import audioSherlock from "@/assets/audio-sherlock.jpg";
@@ -109,6 +113,48 @@ const UNIVERSOS: Universo[] = [
 type Modo = "individual" | "playlist";
 
 function AudioContos() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [accessMap, setAccessMap] = useState({});
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingPack, setPendingPack] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      if (user) {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setAccessMap({
+              'sherlock-01': data.audiocontos_sherlock_vol1 === true,
+              'padre-01': data.audiocontos_padre_vol1 === true,
+              'rainha-01': data.audiocontos_rainha_vol1 === true
+            });
+          } else {
+            setAccessMap({});
+          }
+        } catch (e) { console.error(e); }
+      } else {
+        setAccessMap({});
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    if (pendingPack) {
+      setAbertos(prev => ({ ...prev, [pendingPack]: true }));
+      setPendingPack(null);
+    }
+  };
+
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
   // Todos os pacotes comecem fechados — so abre apos compra (Firebase fase 2)
   const [abertos, setAbertos] = useState<Set<string>>(new Set());
   const [modos, setModos] = useState<Record<string, Modo>>({});
@@ -176,6 +222,24 @@ function AudioContos() {
 
   return (
     <PageShell eyebrow="Coleção de Universos" title="ÁudioContos">
+      {currentUser && (
+        <div style={{ position: 'absolute', top: 90, left: 15, zIndex: 9999 }}>
+          <button 
+            onClick={handleLogout}
+            style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid #9ca3af', color: '#cbd5e1', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '5px' }}
+          >
+            <span style={{fontSize: '1rem'}}>👤</span> Sair
+          </button>
+        </div>
+      )}
+
+      {showAuthModal && (
+        <AuthModal 
+          onClose={() => setShowAuthModal(false)} 
+          onSuccess={handleAuthSuccess} 
+          user={currentUser} 
+        />
+      )}
 
       {/* Elemento de audio global oculto */}
       <audio
@@ -271,7 +335,7 @@ function AudioContos() {
                             {estaAberto
                               ? <ChevronUp className="h-3.5 w-3.5" />
                               : <ChevronDown className="h-3.5 w-3.5" />}
-                            {estaAberto ? "Fechar" : "Ouvir as Histórias"}
+                            {accessMap[pacote.id] ? (estaAberto ? "Fechar" : "Ouvir as Histórias") : "🔒 Acesso Restrito"}
                             {!estaAberto && disponiveis > 0 && (
                               <span className="ml-1 text-muted-foreground normal-case tracking-normal">
                                 • {disponiveis} de {pacote.historias.length} disponíveis
