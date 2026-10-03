@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
@@ -45,11 +44,11 @@ export function PageShell({ eyebrow, title, intro, children }: Props) {
 
 function BackLink() {
   return (
-    <Link
-      to="/"
+    <a
+      href="https://portal-clube-do-misterio.lovable.app/"
       className="inline-flex min-h-12 items-center rounded-md border border-border px-5 py-3 text-sm font-semibold tracking-[0.14em] text-foreground uppercase transition-colors hover:border-gold hover:text-champagne"
     >
       ← Voltar ao Clube
-    </Link>
+    </a>
   );
 }
