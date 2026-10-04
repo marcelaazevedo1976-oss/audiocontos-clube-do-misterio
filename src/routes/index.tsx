@@ -224,16 +224,14 @@ function AudioContos() {
 
   return (
     <PageShell eyebrow="Coleção de Universos" title="ÁudioContos">
-      {currentUser && (
-        <div style={{ position: 'absolute', top: 90, left: 15, zIndex: 9999 }}>
-          <button 
-            onClick={handleLogout}
-            style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid #9ca3af', color: '#cbd5e1', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '5px' }}
-          >
-            <span style={{fontSize: '1rem'}}>👤</span> Sair
-          </button>
-        </div>
-      )}
+      <div style={{ position: 'absolute', top: 90, left: 15, zIndex: 9999 }}>
+        <button 
+          onClick={currentUser ? handleLogout : () => { setPendingPack(null); setShowAuthModal(true); }}
+          style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid #9ca3af', color: '#cbd5e1', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '5px' }}
+        >
+          <span style={{fontSize: '1rem'}}>🚪</span> {currentUser ? 'Sair' : 'Entrar'}
+        </button>
+      </div>
 
       {showAuthModal && (
         <AuthModal 
