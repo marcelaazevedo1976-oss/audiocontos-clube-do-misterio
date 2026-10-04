@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import AuthModal from "../AuthModal";
+import AuthModal from "../AuthModal.jsx";
 import { PageShell } from "@/components/site/PageShell";
 import { Headphones, Lock, ChevronDown, ChevronUp, Play, Pause, SkipForward, SkipBack, RefreshCw } from "lucide-react";
 import audioSherlock from "@/assets/audio-sherlock.jpg";

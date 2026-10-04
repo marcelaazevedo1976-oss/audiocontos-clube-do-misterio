@@ -2,253 +2,230 @@ import React, { useState } from 'react';
 import { auth, db } from './firebase';
 import { 
   signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, sendPasswordResetEmail 
+  sendPasswordResetEmail,
+  signOut
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { audio } from './AudioService';
 
-
-const VIP_CODE = "CLUBE2026";
-
-export default function AuthModal({ onClose, onSuccess, user, grantField = 'audiocontos_sherlock_vol1' }) {
-  const [mode, setMode] = useState(user ? 'unlock' : 'login'); // 'login', 'register', 'unlock'
+export default function AuthModal({ onClose, onSuccess, user, grantField }) {
+  const [mode, setMode] = useState(!user ? 'login' : 'no_access'); 
+  // modes: 'login', 'forgot', 'no_access'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [vipCode, setVipCode] = useState('');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const grantAccess = async (uid) => {
+  const checkAccessAndSuccess = async (uid) => {
     try {
       const userRef = doc(db, 'users', uid);
-      await setDoc(userRef, { [grantField]: true }, { merge: true });
-      onSuccess();
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists() && docSnap.data()[grantField] === true) {
+        onSuccess();
+      } else {
+        setMode('no_access');
+        setError('');
+      }
     } catch (err) {
       console.error(err);
-      setError('Erro ao liberar acesso no banco de dados. Tente novamente.');
+      setError('Erro ao verificar acesso no banco de dados.');
     }
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError('');
-    
-    if (vipCode.trim().toUpperCase() !== VIP_CODE) {
-      setError('Código VIP inválido. Verifique o código na Kiwify.');
-       
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await grantAccess(userCredential.user.uid);
-    } catch (err) {
-      console.error(err);
-      if (err.code === 'auth/email-already-in-use') setError('Este e-mail já está em uso. Faça login.');
-      else if (err.code === 'auth/weak-password') setError('A senha deve ter pelo menos 6 caracteres.');
-      else setError('Erro ao criar conta: ' + err.message);
-       
-    }
-    setLoading(false);
-  };
-
-  
-  const handleReset = async (e) => {
-    e.preventDefault();
-    if (!email) {
-      setError('Digite seu e-mail acima para redefinir a senha.');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setError('E-mail de redefinição enviado! Verifique sua caixa de entrada.');
-    } catch (err) {
-      console.error(err);
-      setError('Erro ao enviar e-mail. Verifique se o e-mail está correto.');
-    }
-    setLoading(false);
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setMessage('');
     setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      // Checar se já tem acesso
-      const userRef = doc(db, 'users', userCredential.user.uid);
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists() && docSnap.data().jogos_do_detetive === true) {
-        onSuccess();
-      } else {
-        // Logou, mas não tem o acesso ainda. Vai para a tela de destrancar.
-        setMode('unlock');
-      }
+      await checkAccessAndSuccess(userCredential.user.uid);
     } catch (err) {
-      console.error(err);
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        setError('E-mail ou senha incorretos.');
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+        setError('Email ou senha incorretos.'); if (audio.playError) audio.playError();
       } else {
-        setError('Erro ao fazer login: ' + err.message);
+        setError('Erro ao fazer login: ' + err.message); if (audio.playError) audio.playError();
       }
-       
     }
     setLoading(false);
   };
 
-  const handleUnlock = async (e) => {
+  const handleReset = async (e) => {
     e.preventDefault();
     setError('');
-    
-    if (vipCode.trim().toUpperCase() !== VIP_CODE) {
-      setError('Código VIP inválido. Verifique o código na Kiwify.');
-       
+    setMessage('');
+    if (!email) {
+      setError('Digite seu email primeiro.');
       return;
     }
-
     setLoading(true);
     try {
-      await grantAccess(user.uid);
+      await sendPasswordResetEmail(auth, email);
+      setMessage('Um link de redefinição foi enviado para o seu email.');
+      setMode('login');
+      if (audio.playSuccess) audio.playSuccess();
     } catch (err) {
-      setError('Erro ao validar código. Tente novamente.');
-       
+      setError('Erro ao redefinir senha: ' + err.message); if (audio.playError) audio.playError();
     }
     setLoading(false);
   };
 
-  const modalStyle = {
-    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(5px)',
-    display: 'flex', justifyContent: 'center', alignItems: 'center',
-    zIndex: 10000, padding: '20px'
-  };
-
-  const boxStyle = {
-    background: 'linear-gradient(180deg, #1e293b 0%, #0f172a 100%)',
-    border: '2px solid #d4af37', borderRadius: '12px',
-    padding: '30px', width: '100%', maxWidth: '400px',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.8)', color: '#f8fafc',
-    position: 'relative'
-  };
-
-  const inputStyle = {
-    width: '100%', padding: '12px', marginBottom: '15px',
-    backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid #475569',
-    borderRadius: '6px', color: '#fff', fontSize: '1rem', boxSizing: 'border-box'
-  };
-
-  const btnStyle = {
-    width: '100%', padding: '14px',
-    background: 'linear-gradient(135deg, #d4af37 0%, #f1c40f 100%)',
-    border: 'none', borderRadius: '8px', color: '#000',
-    fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer',
-    marginTop: '10px', boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)'
+  const handleLogout = async () => {
+    await signOut(auth);
+    setMode('login');
+    setEmail('');
+    setPassword('');
+    setError('');
   };
 
   return (
-    <div style={modalStyle}>
-      <div style={boxStyle}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 font-sans text-champagne">
+      <div className="relative w-full max-w-md rounded-2xl border border-gold-soft bg-slate-950 p-8 shadow-[0_0_40px_rgba(212,175,55,0.15)] animate-in fade-in zoom-in duration-300">
+        
+        {/* Decorative elements */}
+        <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-gold to-transparent" />
+        <div className="absolute -bottom-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-gold to-transparent" />
+
         <button 
           onClick={onClose}
-          style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.5rem', cursor: 'pointer' }}
+          className="absolute right-4 top-4 text-gold-soft hover:text-gold transition-colors"
         >
-          &times;
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
 
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <span style={{ fontSize: '3rem' }}>{mode === 'unlock' ? '🗝️' : '🕵️‍♂️'}</span>
-          <h2 style={{ color: '#d4af37', margin: '10px 0 5px 0' }}>
-            {mode === 'login' ? 'Acesso Restrito' : mode === 'register' ? 'Criar Conta VIP' : mode === 'reset' ? 'Recuperar Senha' : 'Desbloquear Jogos'}
+        <div className="text-center mb-8">
+          <h2 className="font-display text-2xl tracking-wider text-gold uppercase mb-2">
+            {mode === 'no_access' ? 'Acesso Restrito' : 'Identificação'}
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>
-            {mode === 'login' && 'Faça login para continuar sua investigação.'}
-            {mode === 'reset' && 'Insira seu e-mail para receber um link de redefinição de senha.'}
-            {mode === 'register' && 'Crie sua conta e use o código de liberação.'}
-            {mode === 'unlock' && 'Você já está logado! Digite o Código VIP para liberar.'}
-          </p>
+          <div className="h-px w-16 bg-gold mx-auto mb-4" />
         </div>
 
         {error && (
-          <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#fca5a5', padding: '10px', borderRadius: '6px', marginBottom: '15px', fontSize: '0.85rem', textAlign: 'center' }}>
+          <div className="mb-6 rounded border border-red-500/50 bg-red-500/10 p-3 text-center text-sm text-red-400">
             {error}
           </div>
         )}
 
-        
-        {mode === 'reset' && (
-          <form onSubmit={handleReset}>
-            <input 
-              type="email" placeholder="Seu E-mail para redefinir" required 
-              value={email} onChange={(e) => setEmail(e.target.value)} 
-              style={inputStyle} 
-            />
-            <button type="submit" disabled={loading} style={btnStyle}>
-              {loading ? 'Enviando...' : 'Enviar Link de Redefinição'}
-            </button>
-            <div style={{ textAlign: 'center', marginTop: '15px' }}>
-              <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Lembrou a senha? </span>
-              <button 
-                type="button" onClick={() => { setError(''); setMode('login'); }}
-                style={{ background: 'none', border: 'none', color: '#d4af37', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.9rem' }}
+        {message && (
+          <div className="mb-6 rounded border border-gold/50 bg-gold/10 p-3 text-center text-sm text-gold">
+            {message}
+          </div>
+        )}
+
+        {mode === 'no_access' && (
+          <div className="space-y-6 text-center">
+            <div className="flex justify-center">
+              <svg className="h-16 w-16 text-gold/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <p className="text-sm text-gold-soft">
+              Você está logado como <strong className="text-gold">{user?.email}</strong>, mas ainda não possui acesso a este conteúdo.
+            </p>
+            <p className="text-xs text-gold-soft/70">
+              Caso já tenha adquirido, a liberação pode levar alguns instantes. Se não, adquira na nossa loja para liberar.
+            </p>
+            <div className="flex flex-col gap-3 pt-4">
+              <button
+                onClick={handleLogout}
+                className="w-full rounded border border-gold-soft/30 bg-transparent py-3 text-sm font-bold tracking-widest text-gold-soft uppercase hover:bg-gold/5 transition-all"
               >
-                Voltar
+                Sair desta conta
               </button>
             </div>
-          </form>
-        )}
-
-        {(mode === 'login' || mode === 'register') && (
-          <form onSubmit={mode === 'login' ? handleLogin : handleRegister}>
-            <input 
-              type="email" placeholder="Seu E-mail" required 
-              value={email} onChange={(e) => setEmail(e.target.value)} 
-              style={inputStyle} 
-            />
-            <input 
-              type="password" placeholder="Sua Senha" required minLength={6}
-              value={password} onChange={(e) => setPassword(e.target.value)} 
-              style={inputStyle} 
-            />
-            {mode === 'register' && (
-              <input 
-                type="text" placeholder="Código VIP (Kiwify)" required 
-                value={vipCode} onChange={(e) => setVipCode(e.target.value)} 
-                style={{...inputStyle, border: '1px dashed #d4af37', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center', fontWeight: 'bold', color: '#f1c40f'}} 
-              />
-            )}
-            <button type="submit" disabled={loading} style={{...btnStyle, opacity: loading ? 0.7 : 1}}>
-              {loading ? 'Aguarde...' : (mode === 'login' ? 'Entrar' : 'Criar Conta e Liberar')}
-            </button>
-          </form>
-        )}
-
-        {mode === 'unlock' && (
-          <form onSubmit={handleUnlock}>
-            <input 
-              type="text" placeholder="Código VIP (Kiwify)" required 
-              value={vipCode} onChange={(e) => setVipCode(e.target.value)} 
-              style={{...inputStyle, border: '1px dashed #d4af37', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center', fontWeight: 'bold', color: '#f1c40f'}} 
-            />
-            <button type="submit" disabled={loading} style={{...btnStyle, opacity: loading ? 0.7 : 1}}>
-              {loading ? 'Aguarde...' : 'Desbloquear Jogos Agora'}
-            </button>
-          </form>
+          </div>
         )}
 
         {mode === 'login' && (
-          <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: '#cbd5e1' }}>
-            Comprou agora? <button onClick={() => {setMode('register'); setError('');}} style={{ background: 'none', border: 'none', color: '#d4af37', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}>Criar Conta</button>
-          </p>
-        )}
-        
-        {mode === 'register' && (
-          <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: '#cbd5e1' }}>
-            Já tem conta no Clube? <button onClick={() => {setMode('login'); setError('');}} style={{ background: 'none', border: 'none', color: '#d4af37', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}>Faça Login</button>
-          </p>
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
+                Email
+              </label>
+              <input 
+                type="email" 
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
+                placeholder="detetive@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
+                Senha
+              </label>
+              <input 
+                type="password" 
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
+                placeholder="••••••••"
+              />
+            </div>
+            
+            <div className="flex justify-end">
+              <button 
+                type="button" 
+                onClick={() => setMode('forgot')}
+                className="text-xs text-gold-soft hover:text-gold transition-colors"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+
+            <button 
+              type="submit"
+              disabled={loading}
+              className="mt-6 w-full relative group overflow-hidden rounded bg-gold px-4 py-3 text-sm font-bold tracking-widest text-black uppercase transition-all hover:bg-gold-soft disabled:opacity-50"
+            >
+              <span className="relative z-10">{loading ? 'Acessando...' : 'Entrar'}</span>
+              <div className="absolute inset-0 -translate-x-full bg-white/20 group-hover:animate-[shimmer_1.5s_infinite]" />
+            </button>
+          </form>
         )}
 
+        {mode === 'forgot' && (
+          <form onSubmit={handleReset} className="space-y-5">
+            <p className="text-sm text-center text-gold-soft mb-6">
+              Digite seu email para receber um link de redefinição de senha.
+            </p>
+            <div>
+              <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
+                Email
+              </label>
+              <input 
+                type="email" 
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
+                placeholder="detetive@email.com"
+              />
+            </div>
+            
+            <button 
+              type="submit"
+              disabled={loading}
+              className="mt-6 w-full relative group overflow-hidden rounded bg-gold px-4 py-3 text-sm font-bold tracking-widest text-black uppercase transition-all hover:bg-gold-soft disabled:opacity-50"
+            >
+              <span className="relative z-10">{loading ? 'Enviando...' : 'Enviar link'}</span>
+              <div className="absolute inset-0 -translate-x-full bg-white/20 group-hover:animate-[shimmer_1.5s_infinite]" />
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => { setMode('login'); setError(''); setMessage(''); }}
+              className="w-full mt-4 text-xs text-gold-soft hover:text-gold transition-colors uppercase tracking-widest"
+            >
+              Voltar ao login
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
