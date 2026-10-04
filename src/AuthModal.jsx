@@ -159,14 +159,23 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
               <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
                 Senha
               </label>
-              <input 
-                type="password" 
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 pr-20 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
+                  placeholder="••••••••"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gold-soft hover:text-gold uppercase tracking-wider"
+                >
+                  {showPassword ? 'Ocultar' : 'Mostrar'}
+                </button>
+              </div>
             </div>
             
             <div className="flex justify-end">
