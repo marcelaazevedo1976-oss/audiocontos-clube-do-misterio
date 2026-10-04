@@ -16,6 +16,7 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const checkAccessAndSuccess = async (uid) => {
     try {
