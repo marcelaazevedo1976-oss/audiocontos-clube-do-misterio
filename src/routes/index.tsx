@@ -118,37 +118,39 @@ function AudioContos() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [pendingPack, setPendingPack] = useState(null);
 
+  const loadAccess = async (user) => {
+    if (!user) { setAccessMap({}); return {}; }
+    try {
+      const docSnap = await getDoc(doc(db, 'users', user.uid));
+      const data = docSnap.exists() ? docSnap.data() : {};
+      const map = {
+        'sherlock-01': data.audiocontos_sherlock_vol1 === true,
+        'padre-01': data.audiocontos_padre_vol1 === true,
+        'rainha-01': data.audiocontos_rainha_vol1 === true
+      };
+      setAccessMap(map);
+      return map;
+    } catch (e) {
+      console.error(e);
+      return {};
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
-      if (user) {
-        try {
-          const docRef = doc(db, 'users', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setAccessMap({
-              'sherlock-01': data.audiocontos_sherlock_vol1 === true,
-              'padre-01': data.audiocontos_padre_vol1 === true,
-              'rainha-01': data.audiocontos_rainha_vol1 === true
-            });
-          } else {
-            setAccessMap({});
-          }
-        } catch (e) { console.error(e); }
-      } else {
-        setAccessMap({});
-      }
+      await loadAccess(user);
     });
     return () => unsubscribe();
   }, []);
 
-  const handleAuthSuccess = () => {
+  const handleAuthSuccess = async () => {
     setShowAuthModal(false);
-    if (pendingPack) {
+    const map = await loadAccess(auth.currentUser);
+    if (pendingPack && map[pendingPack]) {
       setAbertos(prev => { const next = new Set(prev); next.add(pendingPack); return next; });
-      setPendingPack(null);
     }
+    setPendingPack(null);
   };
 
   const handleLogout = () => {
@@ -236,7 +238,8 @@ function AudioContos() {
       {showAuthModal && (
         <AuthModal 
           onClose={() => setShowAuthModal(false)} 
-          onSuccess={handleAuthSuccess} 
+          onSuccess={handleAuthSuccess}
+              grantField={({'sherlock-01':'audiocontos_sherlock_vol1','padre-01':'audiocontos_padre_vol1','rainha-01':'audiocontos_rainha_vol1'})[pendingPack] || 'audiocontos_sherlock_vol1'} 
           user={currentUser} 
         />
       )}

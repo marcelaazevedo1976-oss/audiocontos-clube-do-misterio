@@ -9,7 +9,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const VIP_CODE = "CLUBE2026";
 
-export default function AuthModal({ onClose, onSuccess, user }) {
+export default function AuthModal({ onClose, onSuccess, user, grantField = 'audiocontos_sherlock_vol1' }) {
   const [mode, setMode] = useState(user ? 'unlock' : 'login'); // 'login', 'register', 'unlock'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ export default function AuthModal({ onClose, onSuccess, user }) {
   const grantAccess = async (uid) => {
     try {
       const userRef = doc(db, 'users', uid);
-      await setDoc(userRef, { jogos_do_detetive: true }, { merge: true });
+      await setDoc(userRef, { [grantField]: true }, { merge: true });
       onSuccess();
     } catch (err) {
       console.error(err);
