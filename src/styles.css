@@ -117,7 +117,7 @@
   }
 }
 
-a[href*="lovable"],
+a[href*="lovable"]:not([href*="portal-clube-do-misterio"]),
 [class*="lovable"],
 [id*="lovable"],
 img[src*="lovable"],

@@ -1,4 +1,4 @@
-﻿import type { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 
@@ -18,7 +18,7 @@ export function PageShell({ eyebrow, title, intro, children }: Props) {
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
           
 
-          <div className='mb-6 flex justify-center'><a href='https://portal-clube-do-misterio.lovable.app/' className='inline-flex items-center gap-2 rounded-full border-2 border-gold bg-gold/10 px-6 py-2 font-display text-sm font-bold tracking-widest text-gold uppercase transition-all hover:bg-gold/20'>← Voltar ao Clube</a></div><header className='mt-8 text-center'>
+          <header className="mt-8 text-center">
             {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
             <h1 className="mt-3 font-display text-4xl leading-tight font-semibold tracking-[0.08em] text-champagne uppercase sm:text-5xl">
               {title}
