@@ -339,7 +339,7 @@ function AudioContos() {
                               setShowAuthModal(true);
                             }
                           }}
-                            className="flex w-fit items-center gap-2 rounded-md border border-gold/60 px-4 py-2 font-typewriter text-xs tracking-[0.15em] text-gold uppercase transition-colors hover:border-gold hover:bg-gold/10"
+                            className="flex w-full sm:w-fit flex-wrap justify-center items-center gap-2 rounded-md border border-gold/60 px-4 py-3 sm:py-2 font-typewriter text-xs tracking-[0.15em] text-gold uppercase transition-colors hover:border-gold hover:bg-gold/10"
                           >
                             {estaAberto
                               ? <ChevronUp className="h-3.5 w-3.5" />
