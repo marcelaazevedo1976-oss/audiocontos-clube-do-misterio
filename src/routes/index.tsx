@@ -5,6 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import AuthModal from "../AuthModal.jsx";
 import { PageShell } from "@/components/site/PageShell";
+import AmbientMixer from "@/components/AmbientMixer";
 import { Headphones, Lock, ChevronDown, ChevronUp, Play, Pause, SkipForward, SkipBack, RefreshCw } from "lucide-react";
 import audioSherlock from "@/assets/audio-sherlock.jpg";
 import audioPadreBrown from "@/assets/audio-padre-brown.jpg";
@@ -475,6 +476,7 @@ function AudioContos() {
             </p>
           </div>
         </div>
-      </div></PageShell>
+      </div>  {currentUser && <AmbientMixer />}
+      </PageShell>
   );
 }
