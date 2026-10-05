@@ -2,14 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sliders, Volume2, VolumeX, CloudRain, Flame, Waves, Music } from 'lucide-react';
 
 const TRACKS = [
-  { id: 'chuva_suave', name: 'Chuva Suave', icon: <CloudRain size={16} />, src: '/chuva_suave.mp3' },
-  { id: 'chuva_forte', name: 'Chuva Forte', icon: <CloudRain size={16} />, src: '/chuva_forte.mp3' },
-  { id: 'lareira', name: 'Lareira', icon: <Flame size={16} />, src: '/lareira.mp3' },
-  { id: 'mar', name: 'Barulho do Mar', icon: <Waves size={16} />, src: '/mar.mp3' },
-  { id: 'musica_1', name: 'Tensão 1', icon: <Music size={16} />, src: '/musica_1.mp3' },
-  { id: 'musica_2', name: 'Tensão 2', icon: <Music size={16} />, src: '/musica_2.mp3' },
-  { id: 'musica_3', name: 'Investigação', icon: <Music size={16} />, src: '/musica_3.mp3' },
-  { id: 'musica_4', name: 'Mistério', icon: <Music size={16} />, src: '/musica_4.mp3' },
+  // Ambientes
+  { id: 'chuva_calma', name: '🌧️ Chuva Calma', icon: <CloudRain size={16} />, src: '/Chuva Calma.mp3' },
+  { id: 'chuva_forte', name: '⛈️ Chuva Forte', icon: <CloudRain size={16} />, src: '/Chuva Forte.mp3' },
+  { id: 'tempestade', name: '🌩️ Tempestade', icon: <CloudRain size={16} />, src: '/Tempestade.mp3' },
+  { id: 'lareira', name: '🔥 Lareira Crepitante', icon: <Flame size={16} />, src: '/Lareira Crepitante.mp3' },
+  { id: 'ondas_mar', name: '🌊 Ondas do Mar', icon: <Waves size={16} />, src: '/Ondas do Mar.mp3' },
+  { id: 'passaros', name: '🐦 Pássaros', icon: <Music size={16} />, src: '/Pássaros.mp3' },
+  
+  // Músicas Clássicas
+  { id: 'allemande', name: '🎻 Allemande', icon: <Music size={16} />, src: '/Allemande.mp3' },
+  { id: 'allegro', name: '🎻 Allégro', icon: <Music size={16} />, src: '/Allégro.mp3' },
+  { id: 'anton', name: '🎻 Anton', icon: <Music size={16} />, src: '/Anton.mp3' },
+  { id: 'bach', name: '🎻 Bach Celo Suite', icon: <Music size={16} />, src: '/Bach Celo Suite No.1.mp3' },
 ];
 
 export default function AmbientMixer() {
