@@ -224,10 +224,10 @@ function AudioContos() {
 
   return (
     <PageShell eyebrow="Coleção de Universos" title="ÁudioContos">
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
+      <div style={{ position: 'absolute', top: 90, left: 15, zIndex: 9999 }}>
         <button 
           onClick={currentUser ? handleLogout : () => { setPendingPack(null); setShowAuthModal(true); }}
-          style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid #9ca3af', color: '#cbd5e1', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '8px' }}
+          style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid #9ca3af', color: '#cbd5e1', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '5px' }}
         >
           <span style={{fontSize: '1rem'}}>👤</span> {currentUser ? 'Sair' : 'Entrar'}
         </button>
@@ -447,6 +447,34 @@ function AudioContos() {
           </section>
         ))}
       </div>
-    </PageShell>
+      {/* SEÇÃO COMO FUNCIONA AUDIOCONTOS */}
+      <div id="como-funciona" style={{ width: '100%', maxWidth: '800px', margin: '60px auto 40px auto', padding: '30px', background: 'rgba(0,0,0,0.7)', borderTop: '2px solid #d4af37', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', backdropFilter: 'blur(5px)' }}>
+        <h2 style={{ color: '#d4af37', textAlign: 'center', fontFamily: '"Cinzel", serif', letterSpacing: '2px', marginBottom: '25px', textTransform: 'uppercase', fontSize: '1.8rem' }}>
+          Como Funciona o ÁudioContos
+        </h2>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', color: '#eaddc5', lineHeight: '1.6' }}>
+          <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+            <h3 style={{ color: '#d4af37', margin: '0 0 10px 0', fontSize: '1.2rem', fontFamily: '"Cinzel", serif' }}>1. Escolha um Universo</h3>
+            <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>
+              Navegue pelas coleções disponíveis: Sherlock Holmes, Padre Brown ou Rainha do Crime. Cada pacote contém dezenas de histórias narradas.
+            </p>
+          </div>
+          
+          <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+            <h3 style={{ color: '#d4af37', margin: '0 0 10px 0', fontSize: '1.2rem', fontFamily: '"Cinzel", serif' }}>2. Desbloqueie o Acesso</h3>
+            <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>
+              Ouça a amostra grátis. Para ouvir o restante, clique em "Liberar Acesso" para ser direcionado à página de compra. Retorne e faça o Login com seu e-mail!
+            </p>
+          </div>
+          
+          <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+            <h3 style={{ color: '#d4af37', margin: '0 0 10px 0', fontSize: '1.2rem', fontFamily: '"Cinzel", serif' }}>3. Ouça no Escuro</h3>
+            <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>
+              Feche os olhos e mergulhe. Todas as histórias possuem narração profissional, trilha sonora imersiva e efeitos sonoros realistas para te transportar direto para a cena do crime.
+            </p>
+          </div>
+        </div>
+      </div></PageShell>
   );
 }
