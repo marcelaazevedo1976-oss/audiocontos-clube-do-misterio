@@ -3,18 +3,18 @@ import { Sliders, Volume2, VolumeX, CloudRain, Flame, Waves, Music } from 'lucid
 
 const TRACKS = [
   // Ambientes
-  { id: 'chuva_calma', name: '🌧️ Chuva Calma', icon: <CloudRain size={16} />, src: '/Chuva Calma.mp3' },
-  { id: 'chuva_forte', name: '⛈️ Chuva Forte', icon: <CloudRain size={16} />, src: '/Chuva Forte.mp3' },
-  { id: 'tempestade', name: '🌩️ Tempestade', icon: <CloudRain size={16} />, src: '/Tempestade.mp3' },
-  { id: 'lareira', name: '🔥 Lareira Crepitante', icon: <Flame size={16} />, src: '/Lareira Crepitante.mp3' },
-  { id: 'ondas_mar', name: '🌊 Ondas do Mar', icon: <Waves size={16} />, src: '/Ondas do Mar.mp3' },
-  { id: 'passaros', name: '🐦 Pássaros', icon: <Music size={16} />, src: '/Pássaros.mp3' },
+  { id: 'chuva_calma', name: '🌧️ Chuva Calma', src: '/Chuva Calma.mp3' },
+  { id: 'chuva_forte', name: '⛈️ Chuva Forte', src: '/Chuva Forte.mp3' },
+  { id: 'tempestade', name: '🌩️ Tempestade', src: '/Tempestade.mp3' },
+  { id: 'lareira', name: '🔥 Lareira Crepitante', src: '/Lareira Crepitante.mp3' },
+  { id: 'ondas_mar', name: '🌊 Ondas do Mar', src: '/Ondas do Mar.mp3' },
+  { id: 'passaros', name: '🐦 Pássaros', src: '/Pássaros.mp3' },
   
   // Músicas Clássicas
-  { id: 'allemande', name: '🎻 Allemande', icon: <Music size={16} />, src: '/Allemande.mp3' },
-  { id: 'allegro', name: '🎻 Allégro', icon: <Music size={16} />, src: '/Allégro.mp3' },
-  { id: 'anton', name: '🎻 Anton', icon: <Music size={16} />, src: '/Anton.mp3' },
-  { id: 'bach', name: '🎻 Bach Celo Suite', icon: <Music size={16} />, src: '/Bach Celo Suite No.1.mp3' },
+  { id: 'allemande', name: '🎻 Allemande', src: '/Allemande.mp3' },
+  { id: 'allegro', name: '🎻 Allégro', src: '/Allégro.mp3' },
+  { id: 'anton', name: '🎻 Anton', src: '/Anton.mp3' },
+  { id: 'bach', name: '🎻 Bach Celo Suite', src: '/Bach Celo Suite No.1.mp3' },
 ];
 
 export default function AmbientMixer() {
@@ -93,8 +93,7 @@ export default function AmbientMixer() {
                 <div key={track.id} style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: playing[track.id] ? '#d4af37' : '#cbd5e1' }}>
-                      {track.icon}
-                      <span style={{ fontSize: '0.9rem', fontWeight: playing[track.id] ? 'bold' : 'normal' }}>{track.name}</span>
+                                            <span style={{ fontSize: '0.9rem', fontWeight: playing[track.id] ? 'bold' : 'normal' }}>{track.name}</span>
                     </div>
                     <button 
                       onClick={() => togglePlay(track.id)}
