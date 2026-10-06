@@ -136,6 +136,12 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
               >
                 Sair desta conta
               </button>
+              <a
+                href="https://pay.kiwify.com.br/0MLVbfD" target="_blank" rel="noopener noreferrer"
+                className="w-full rounded bg-gold/10 border border-gold/50 py-3 text-sm font-bold tracking-widest text-gold uppercase hover:bg-gold/20 transition-all block text-center mt-2"
+              >
+                🔓 Adquirir Acesso (R$ 19,90)
+              </a>
             </div>
           </div>
         )}
@@ -196,6 +202,15 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
               <span className="relative z-10">{loading ? 'Acessando...' : 'Entrar'}</span>
               <div className="absolute inset-0 -translate-x-full bg-white/20 group-hover:animate-[shimmer_1.5s_infinite]" />
             </button>
+            <div className="text-center mt-6">
+              <p className="text-xs text-gold-soft mb-3">Não tem uma conta?</p>
+              <a
+                href="https://pay.kiwify.com.br/0MLVbfD" target="_blank" rel="noopener noreferrer"
+                className="w-full rounded border border-gold/50 bg-transparent py-3 text-sm font-bold tracking-widest text-gold uppercase hover:bg-gold/10 transition-all block text-center"
+              >
+                Adquirir Acesso (R$ 19,90)
+              </a>
+            </div>
           </form>
         )}
 
