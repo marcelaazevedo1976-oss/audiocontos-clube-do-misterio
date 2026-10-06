@@ -142,6 +142,12 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
               >
                 🔓 Adquirir Acesso (R$ 19,90)
               </a>
+              <a
+                href="https://portal-clube-do-misterio.lovable.app/pacotes" target="_blank" rel="noopener noreferrer"
+                className="w-full mt-2 rounded border border-gold/30 bg-transparent py-3 text-sm font-bold tracking-widest text-gold-soft uppercase hover:bg-gold/5 transition-all block text-center"
+              >
+                Ver Combos Promocionais
+              </a>
             </div>
           </div>
         )}
@@ -209,6 +215,12 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
                 className="w-full rounded border border-gold/50 bg-transparent py-3 text-sm font-bold tracking-widest text-gold uppercase hover:bg-gold/10 transition-all block text-center"
               >
                 Adquirir Acesso (R$ 19,90)
+              </a>
+              <a
+                href="https://portal-clube-do-misterio.lovable.app/pacotes" target="_blank" rel="noopener noreferrer"
+                className="w-full mt-2 rounded border border-gold/30 bg-transparent py-3 text-sm font-bold tracking-widest text-gold-soft uppercase hover:bg-gold/5 transition-all block text-center"
+              >
+                Ver Combos Promocionais
               </a>
             </div>
           </form>
