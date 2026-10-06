@@ -332,19 +332,23 @@ function AudioContos() {
                         {pacote.disponivel ? (
                           <button
                             onClick={() => {
-                            if (accessMap[pacote.id]) {
-                              toggleAberto(pacote.id);
-                            } else {
-                              setPendingPack(pacote.id);
-                              setShowAuthModal(true);
-                            }
-                          }}
+                              if (accessMap[pacote.id]) {
+                                toggleAberto(pacote.id);
+                              } else {
+                                if (pacote.id === 'sherlock') {
+                                  window.location.href = 'https://pay.kiwify.com.br/0MLVbfD';
+                                } else {
+                                  setPendingPack(pacote.id);
+                                  setShowAuthModal(true);
+                                }
+                              }
+                            }}
                             className="flex w-full sm:w-fit flex-wrap justify-center items-center gap-2 rounded-md border border-gold/60 px-4 py-3 sm:py-2 font-typewriter text-xs tracking-[0.15em] text-gold uppercase transition-colors hover:border-gold hover:bg-gold/10"
                           >
                             {estaAberto
                               ? <ChevronUp className="h-3.5 w-3.5" />
                               : <ChevronDown className="h-3.5 w-3.5" />}
-                            {accessMap[pacote.id] ? (estaAberto ? "Fechar" : "Ouvir as Histórias") : "🔒 Acesso Restrito"}
+                            {accessMap[pacote.id] ? (estaAberto ? "Fechar" : "Ouvir as Histórias") : "🔒 Comprar Acesso (R$ 19,90)"}
                             {!estaAberto && disponiveis > 0 && (
                               <span className="ml-1 text-muted-foreground normal-case tracking-normal">
                                 • {disponiveis} de {pacote.historias.length} disponíveis
