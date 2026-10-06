@@ -155,22 +155,18 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
         {mode === 'login' && (
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
-                Email
-              </label>
+              
               <input 
                 type="email" 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
-                placeholder="detetive@email.com"
+                placeholder="Email (ex: detetive@email.com)"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
-                Senha
-              </label>
+              
               <div className="relative">
                 <input 
                   type={showPassword ? "text" : "password"} 
@@ -178,7 +174,7 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 pr-20 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
-                  placeholder="••••••••"
+                  placeholder="Senha"
                 />
                 <button 
                   type="button"
@@ -232,16 +228,14 @@ export default function AuthModal({ onClose, onSuccess, user, grantField }) {
               Digite seu email para receber um link de redefinição de senha.
             </p>
             <div>
-              <label className="block text-xs font-bold tracking-wider text-gold-soft uppercase mb-2">
-                Email
-              </label>
+              
               <input 
                 type="email" 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded border border-gold-soft/30 bg-black/50 px-4 py-3 text-champagne placeholder-gold-soft/30 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
-                placeholder="detetive@email.com"
+                placeholder="Email (ex: detetive@email.com)"
               />
             </div>
             
