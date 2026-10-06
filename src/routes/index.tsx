@@ -462,7 +462,7 @@ function AudioContos() {
           <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
             <h3 style={{ color: '#d4af37', margin: '0 0 10px 0', fontSize: '1.2rem', fontFamily: '"Cinzel", serif' }}>1. Escolha um Universo</h3>
             <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>
-              Navegue pelas coleções disponíveis: Sherlock Holmes, Padre Brown ou Rainha do Crime. Cada pacote contém dezenas de histórias narradas.
+              Escolha a sua coleção preferida: Sherlock Holmes, Padre Brown ou Rainha do Crime. Ao adquirir um pacote, você desbloqueia o acesso a dezenas de contos misteriosos.
             </p>
           </div>
           
@@ -476,7 +476,7 @@ function AudioContos() {
           <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
             <h3 style={{ color: '#d4af37', margin: '0 0 10px 0', fontSize: '1.2rem', fontFamily: '"Cinzel", serif' }}>3. Ouça no Escuro</h3>
             <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>
-              Feche os olhos e mergulhe. Todas as histórias possuem narração profissional. Use nossa Mesa de Som exclusiva no topo da tela para adicionar trilhas sonoras e efeitos de ambiente (como chuva, trem ou lareira), mixando tudo do seu jeito para uma imersão total na cena do crime.
+              Feche os olhos e mergulhe. Todas as histórias possuem narração profissional. Use nossa Mesa de Som exclusiva no topo da tela para adicionar trilhas sonoras e efeitos de ambiente (como chuva, ondas do mar ou lareira), mixando tudo do seu jeito para uma imersão total na cena do crime.
             </p>
           </div>
         </div>
